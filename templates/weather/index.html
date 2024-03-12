@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>What's the weather like?</title>
+    <link
+      rel="icon"
+      href="https://scontent.fhan3-5.fna.fbcdn.net/v/t1.15752-9/409734883_353881010595608_3062716164204579649_n.png?_nc_cat=109&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeG5B0l5lhvdDCwc8tB48LRkisgKlIpju_WKyAqUimO79bHf8khcJn3qwXDyZTZqiq0eimPxpy0yhcmWpvyscAjR&_nc_ohc=ooemF2xWzR0AX_8D6Hv&_nc_ht=scontent.fhan3-5.fna&oh=03_AdSoraMSBKa1jVw49GGeajc8_9pjlCx6V9EcdVNFoc5dUg&oe=65B70044"
+      type="image/png"
+      sizes="64x64"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style type="text/css">
+      * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        box-sizing: border-box;
+      }
+
+      li,
+      ul,
+      body {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      a {
+        color: black;
+        text-decoration: none;
+      }
+
+      input,
+      button {
+        outline: none;
+        border: none;
+      }
+
+      .container-logo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        margin-left: 40px;
+      }
+
+      img {
+        height: 60px;
+        width: 60px;
+      }
+      .media-remove img {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+      }
+      .media-remove img:hover {
+        opacity: 0.7;
+      }
+      .hero.is-primary {
+        background-color: #f56e6e;
+        color: #fff;
+      }
+      .button.is-info {
+        background-color: #ff5d5d;
+        border-color: transparent;
+        color: #fff;
+      }
+      .hero-body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .log {
+  
+      }
+      .log button {
+        border: none;
+        padding: 4px 16px;
+        border-radius: 8px;
+        font-size: 16px;
+        background: bisque;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .login {
+        margin-right: 8px;
+      }
+
+      /*            LOG UP                 */
+      .section-logup {
+        display: none;
+        position: relative;
+        z-index: 999;
+      }
+
+      .log-up-page {
+        position: absolute;
+        width: 70%;
+        transform: translateX(-50%);
+        left: 50%;
+      }
+
+      .log-up-page h1 {
+        text-align: center;
+        padding: 20px;
+        color: #3b0b0b;
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .log-up-page .container {
+        margin: auto;
+        width: 100%;
+      }
+
+      .log-up-page .form-wrapper {
+        background-color: #ff73738c;
+        padding: 20px;
+        border-radius: 16px;
+      }
+
+      .log-up-page form {
+        width: 50%;
+        margin: auto;
+        margin-bottom: 20px;
+      }
+
+      .log-up-page input {
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+      }
+
+      .log-up-page input:hover {
+        border: 1px solid #dbdbdb;
+      }
+
+      .log-up-page input:focus {
+        border: 1px solid #ccc;
+      }
+
+      .log-up-page .user-name {
+        position: relative;
+        margin-bottom: 16px;
+      }
+
+      .log-up-page .user-name input {
+        width: 100%;
+      }
+
+      .log-up-page .pass {
+        position: relative;
+        display: flex;
+        align-self: center;
+        margin-bottom: 16px;
+      }
+
+      .log-up-page .pass input {
+        width: 100%;
+      }
+
+      .log-up-page .pass span {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        line-height: 100%;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+
+      .log-up-page .pass-again {
+        position: relative;
+        display: flex;
+        align-self: center;
+        margin-bottom: 50px;
+      }
+
+      .log-up-page .pass-again.active::after {
+        position: absolute;
+        content: "Không khớp với mật khẩu đã nhập!?";
+        color: red;
+        bottom: 0;
+        transform: translateY(100%);
+        font-size: small;
+        margin-left: 10px;
+      }
+
+      .log-up-page .pass-again input {
+        width: 100%;
+      }
+
+      .log-up-page .pass-again span {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        line-height: 100%;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+
+      .log-up-page .target-hide {
+        display: none;
+      }
+
+      .log-up-page .hide .target-hide {
+        display: block;
+      }
+
+      .log-up-page .target-unHide {
+        display: block;
+      }
+
+      .log-up-page .hide .target-unHide {
+        display: none;
+      }
+
+      .log-up-page .submit {
+        width: 100%;
+      }
+
+      .log-up-page .submit input {
+        width: 100%;
+        border: 1px solid #dbdbdb;
+        font-size: medium;
+        font-weight: 600;
+      }
+
+      .log-up-page .to-log-in a {
+        padding: 6px 20px;
+        background-color: #dbdbdb;
+        border-radius: 16px;
+        cursor: pointer;
+      }
+
+      .log-up-page .to-log-in a:hover {
+        background-color: aliceblue;
+      }
+
+      /* LOG-IN */
+
+      .section-login {
+        display: none;
+        position: relative;
+        z-index: 999;
+      }
+
+      .log-in-page {
+        position: absolute;
+        width: 70%;
+        transform: translateX(-50%);
+        left: 50%;
+      }
+
+      .log-in-page.hide {
+        display: none;
+      }
+
+      .log-in-page h1 {
+        text-align: center;
+        padding: 20px;
+        color: #3b0b0b;
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .log-in-page .container {
+        margin: auto;
+        width: 100%;
+      }
+
+      .log-in-page .form-wrapper {
+        background-color: #ff73738c;
+        padding: 20px;
+        border-radius: 16px;
+      }
+
+      .log-in-page form {
+        width: 50%;
+        margin: auto;
+        margin-bottom: 20px;
+      }
+
+      .log-in-page input {
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+      }
+
+      .log-in-page input:hover {
+        border: 1px solid #dbdbdb;
+      }
+
+      .log-in-page input:focus {
+        border: 1px solid #ccc;
+      }
+
+      .log-in-page .user-name {
+        position: relative;
+        margin-bottom: 10px;
+      }
+
+      .log-in-page .user-name input {
+        width: 100%;
+      }
+
+      .log-in-page .pass {
+        position: relative;
+        display: flex;
+        align-self: center;
+        margin-bottom: 10px;
+      }
+
+      .log-in-page .pass input {
+        width: 100%;
+      }
+
+      .log-in-page .pass span {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        line-height: 100%;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+
+      .log-in-page .target-hide {
+        display: none;
+      }
+
+      .log-in-page .hide .target-hide {
+        display: block;
+      }
+
+      .log-in-page .target-unHide {
+        display: block;
+      }
+
+      .log-in-page .hide .target-unHide {
+        display: none;
+      }
+
+      .log-in-page .submit {
+        width: 100%;
+      }
+
+      .log-in-page .submit input {
+        width: 100%;
+        border: 1px solid #dbdbdb;
+        font-size: medium;
+        font-weight: 600;
+      }
+
+      .log-in-page .to-log-up a {
+        padding: 6px 20px;
+        background-color: #dbdbdb;
+        border-radius: 16px;
+        cursor: pointer;
+      }
+
+      .log-in-page .to-log-up a:hover {
+        background-color: aliceblue;
+      }
+
+      /* CURTAIN COVER */
+      .cover {
+        display: none;
+        position: fixed;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.2);
+        width: 100%;
+        top: 0;
+      }
+
+      .lil-title {
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      .temp {
+        font-weight: 600;
+      }
+      .des {
+      }
+
+      .user-in {
+        margin-right: 12px !important;
+        padding: 8px !important;
+        border-radius: 26px !important;
+        color: white !important;
+        background: #ff3232 !important;
+        border: 1px solid !important;
+        pointer-events: none;
+      }
+      #mess-danger{
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container-logo">
+          <img
+            src="https://scontent.fhan3-5.fna.fbcdn.net/v/t1.15752-9/409734883_353881010595608_3062716164204579649_n.png?_nc_cat=109&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeG5B0l5lhvdDCwc8tB48LRkisgKlIpju_WKyAqUimO79bHf8khcJn3qwXDyZTZqiq0eimPxpy0yhcmWpvyscAjR&_nc_ohc=ooemF2xWzR0AX_8D6Hv&_nc_ht=scontent.fhan3-5.fna&oh=03_AdSoraMSBKa1jVw49GGeajc8_9pjlCx6V9EcdVNFoc5dUg&oe=65B70044"
+          />
+          <h1 class="title">What's the weather like?</h1>
+        </div>
+
+        <div>
+          {% if user.is_authenticated %}
+          <div class="log">
+            <button class="user-in">{{request.user}}</button>
+            <button class="log out"><a href="{% url 'log-out'%}">Log out</a></button>
+          </div>
+          {% else %}
+            <div class="log">
+              <button class="login" onclick="logOn('in')"><a href="{% url 'log-in'%}">Log in</a></button>
+              <button class="logup" onclick="logOn('up')"><a href="{% url 'register'%}">Log up</a></button>
+            </div>
+            {% if prepareUp %}
+            <span style="display: none;" class="show-logup">1</span>
+            {% else %}
+            <span style="display: none;" class="show-logup">0</span>
+            {% endif %}
+
+            {% if prepareIn %}
+            <span style="display: none;" class="show-login">1</span>
+            {% else %}
+            <span style="display: none;" class="show-login">0</span>
+            {% endif %}
+
+          {% endif %}
+        </div>
+      
+      </div>
+    </section>
+
+    <section class="section-logup">
+      <div class="log-up-page">
+        <div class="container">
+          <h1>Log-up</h1>
+          <div class="form-wrapper">
+            <form method="POST">
+              {% csrf_token %} 
+              <div class="user-name">
+                {{formAuth.username}}
+              </div>
+              <div class="pass">
+                {{formAuth.password1}}
+                <span onclick="unHidePassword(this)">
+                  <i class="fas fa-eye target-unHide"></i>
+                  <i class="fas fa-eye-slash target-hide"></i>
+                </span>
+              </div>
+
+              <div class="pass-again">
+                {{formAuth.password2}}
+                <span onclick="unHidePassword(this)">
+                  <i class="fas fa-eye target-unHide"></i>
+                  <i class="fas fa-eye-slash target-hide"></i>
+                </span>
+              </div>
+              {% if messages %}
+                <ul class="messages" id="mess-danger">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+              {% endif %}
+              <div class="submit">
+                <input
+                  type="submit"
+                  value="Log up"
+                  onclick="handleSubmitLogUp(this)"
+                />
+              </div>
+            </form>
+            <div class="to-log-in" style="text-align: center">
+              <button style="
+              border-radius: 8px;
+              padding: 6px 16px;
+              background: #f0f0b9;
+              font-weight: 700;
+          " onclick="switchLog('in')"><a href="{% url 'log-in'%}">Log in</a></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section-login">
+      <!-- LOG-IN-->
+      <div class="log-in-page">
+        <div class="container">
+          <h1>Log-in</h1>
+          <div class="form-wrapper">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div class="user-name">
+                <input type="text" placeholder="User name" name="username"/>
+              </div>
+
+              <div class="pass">
+                <input type="password" placeholder="Password" name="password"/>
+                <span onclick="unHidePassword(this)">
+                  <i class="fas fa-eye target-unHide"></i>
+                  <i class="fas fa-eye-slash target-hide"></i>
+                </span>
+              </div>
+              {% if messages %}
+                <ul class="messages"  id="mess-danger">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+              {% endif %}
+              <div class="submit">
+                <input
+                  type="submit"
+                  value="Log in"
+                  onclick="handleSubmitLogIn(this)"
+                />
+              </div>
+            </form>
+            <div class="to-log-up" style="text-align: center">
+              <button
+                style="
+                  border-radius: 8px;
+                  padding: 6px 16px;
+                  background: #f0f0b9;
+                  font-weight: 700;
+                "
+                onclick="switchLog('up')"
+              >
+              <a href="{% url 'register'%}">Log up</a>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column">
+            <form method="POST">
+              <form method="POST">
+                {% csrf_token %}
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    {{ form.name }}
+                  </div>
+                  <div class="control">
+                    <button class="button is-info">Add City</button>
+                  </div>
+                </div>
+              </form>
+            </form>
+            {% if messages and prepareIn != True and prepareUp != True  %}
+                <ul class="messages"  id="mess-danger">
+                  {% for message in messages %}
+                      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                  {% endfor %}
+                  </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column content">
+            {% for weather in weather_data %}
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <figure class="image is-50x50">
+                    <img
+                      src="http://openweathermap.org/img/w/{{ weather.icon }}.png"
+                      alt="Image"
+                    />
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <div class="title">
+                      <span>{{ weather.city }}</span>
+                      <span class="lil-title">{{ weather.country }}</span>
+                    </div>
+
+                    <div>
+                      <span class="subtitle temp"
+                        >{{ weather.temperature }}°C</span
+                      >
+                      <span>🫴🏽</span>
+                      <span class="subtitle des">
+                        {{ weather.description }}</span
+                      >
+                    </div>
+                  </div>
+                </div>  
+                <div class="media-remove">
+                  <i style="display: none;">{{weather.id}}</i>
+                      <img
+                      src="https://scontent.fhan3-4.fna.fbcdn.net/v/t1.15752-9/370240556_1717753038744665_1904405372243693869_n.png?_nc_cat=104&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeEnMBkl7xupa-v4ze1wGkJrQKZdD72sjUBApl0PvayNQEJ83ufqxhCYebkR_tTKM3kQVbAwDF4CchSsrroC0qDq&_nc_ohc=ICAPMEepdS8AX-7YlXe&_nc_ht=scontent.fhan3-4.fna&oh=03_AdSQ9rKhMZi1sGQO4VA9YrTnONmLqHIyUuJcHyhFpUtLsg&oe=65B70B10"
+                    />
+                </div>
+              </article>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="cover"></section>
+    <script>
+      const removeBtns = document.querySelectorAll(".media-remove");
+      const parentNode = document.querySelector(".column.content");
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      removeBtns.forEach((removeBtn) => {
+        removeBtn.onclick = (e) => {
+          childNode = e.target.parentNode.parentNode.parentNode;
+          
+          id = childNode.querySelector('.media-remove').querySelector('i').innerHTML
+           // https://jolly-dune-e37ddf912c4641b48100e67814c118bc.azurewebsites.net/delete/
+          fetch("https://jolly-dune-e37ddf912c4641b48100e67814c118bc.azurewebsites.net/delete/", {
+                    method: "POST",
+                    body: JSON.stringify(id),
+                    headers: {"Content-type": "application/json; charset=UTF-8",
+                              "X-CSRFToken": csrfToken}}
+          ).then(res => console.log(res))
+          parentNode.removeChild(childNode);
+        }});
+
+      const showLogUp = document.querySelector('.show-logup')
+      const showLogIn = document.querySelector('.show-login')
+      const cover = document.querySelector(".cover");
+      const logup = document.querySelector(".section-logup");
+      const login = document.querySelector(".section-login");
+
+      cover.onclick = (e) => {
+        shutDownCover();
+      };
+
+      const switchLog = (e) => {
+        shutDownCover();
+        logOn(e);
+      };
+
+      const shutDownCover = () => {
+        logup.style.display = "none";
+        login.style.display = "none";
+        cover.style.display = "none";
+        document.querySelector("html").style.overflow = "auto";
+        window.location.href = "{% url 'home' %}"
+      };
+
+      const logOn = (logType) => {
+        if (logType === "up") {
+          logup.style.display = "block";
+          cover.style.display = "block";
+          document.querySelector("html").style.overflow = "hidden";
+        } else {
+          login.style.display = "block";
+          cover.style.display = "block";
+          document.querySelector("html").style.overflow = "hidden";
+        }
+      };
+
+      if(showLogUp.innerHTML === '1') {
+        logOn('up')
+      } else if(showLogIn.innerHTML === '1') {
+        logOn('in')
+      }
+    </script>
+
+    <!-- //LOGUP// -->
+    <script type="text/javascript">
+
+      const handleSubmitLogUp = (target) => {
+        //log up
+        const userNameInput = document.querySelector(
+          ".log-up-page .user-name input"
+        );
+        const passwordInput = document.querySelector(
+          '.log-up-page .pass input[type="password"]'
+        );
+
+        const passwordAgainInput = document.querySelector(
+          '.log-up-page .pass-again input[type="password"]'
+        );
+
+        if (
+          userNameInput.value.length !== 0 &&
+          passwordInput.value.length !== 0 &&
+          passwordAgainInput.value.length !== 0 &&
+          !passwordAgainInput.parentElement.classList.contains("active")
+        ) {
+        } else {
+          event.preventDefault();
+          alert("Vui lòng nhập đầy đủ thông tin");
+        }
+      };
+
+      const unHidePassword = (target) => {
+        const targetParent = target.parentElement;
+        const input = targetParent.childNodes[1];
+        if (targetParent.classList.contains("hide")) {
+          targetParent.classList.remove("hide");
+          input.type = "password";
+        } else {
+          targetParent.classList.add("hide");
+          input.type = "text";
+        }
+      };
+
+      const handleSubmitLogIn = (target) => {
+        const userNameInput = document.querySelector(
+          ".log-in-page .user-name input"
+        );
+        const password = document.querySelector(".log-in-page .pass input");
+
+        if (userNameInput.value.length > 0 && password.value.length > 0) {
+        } else {
+          event.preventDefault();
+          alert("Vui lòng nhập đầy đủ thông tin");
+        }
+      };
+    </script>
+  </body>
+</html>
